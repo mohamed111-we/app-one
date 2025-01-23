@@ -1,0 +1,6 @@
+.header_custom table thead > tr >th {
+    background-color: #d0e8ff !important;
+    color: #333333 !important;
+    font-size: 14px !important;
+    font-weight: bold;
+}
