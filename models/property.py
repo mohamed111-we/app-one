@@ -44,6 +44,10 @@ class Property(models.Model):
     active = fields.Boolean(string="Active", default=True)
     owner_count = fields.Integer(compute='_compute_owner_count')
 
+    _sql_constraints = [
+        ('uniq_name', 'UNIQUE("name")', "A tag with the same name already exists.")
+    ]
+
     @api.depends('owner_id')
     def _compute_owner_count(self):
         for rec in self:
@@ -51,10 +55,6 @@ class Property(models.Model):
                 rec.owner_count = self.env['owner.owner'].search_count([('id', '=', rec.owner_id.id)])
             else:
                 rec.owner_count = 0
-
-    _sql_constraints = [
-        ('uniq_name', 'UNIQUE("name")', "A tag with the same name already exists.")
-    ]
 
     @api.depends('expected_price', 'selling_price')
     def _compute_diff(self):
@@ -96,7 +96,8 @@ class Property(models.Model):
 
     def action(self):
          # search([('Field Name', 'operation', 'Value')])
-         print(self.env['property.property'].search(['|',('name', '=', 'Property 1'), ('postcode', '!=', '1234')]))
+         _search = self.env['property.property'].search(['|',('name', '=', 'Property 1'), ('postcode', '!=', '1234')])
+         print(_search)
 
 
     @api.model_create_multi
